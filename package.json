@@ -1,0 +1,39 @@
+{
+  "name": "win-gen",
+  "version": "0.0.2",
+  "description": "Create artifacts using JSON schema for use in win.",
+  "keywords": [
+    "Neural Network",
+    "NN",
+    "Artificial Neural Networks",
+    "WIN",
+    "ANN",
+    "CPPN",
+    "NEAT",
+    "HyperNEAT"
+  ],
+  "author": {
+    "name": "Paul Szerlip",
+    "email": "Paul.Szerlip@cs.ucf.edu",
+    "url": "http://designforcode.com/"
+  },
+  "main": "lib/wingen.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OptimusLime/winjs.git"
+  },
+  "bugs": "https://github.com/OptimusLime/winjs/issues",
+  "license": "MIT",
+  "dependencies": {
+    "q" : "*",
+    "optimuslime-traverse" : "*",
+    "win-utils": "0.x.x",
+    "cppnjs": "0.x.x",
+    "neatjs": "0.x.x"
+  },
+  "devDependencies": {
+    "win-backbone" : "*",
+    "mocha": "1.1.x",
+    "should": "1.1.x"
+  }
+}
