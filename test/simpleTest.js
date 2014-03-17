@@ -25,6 +25,37 @@ var emptyModule =
     }
 };
 
+var sampleEncoding = 
+{
+	winFunction : "encoding",
+	encodingName : "sample",
+	eventCallbacks : function()
+	{ 
+		return {
+			"encoding:sample-createOffspring" : function(count, parents, override, done) { 
+				console.log('called create sample offspring ',arguments); 
+				process.nextTick(function(){done(undefined, {"junk" : "stuff"});});
+			 	return; 
+			 },
+			"encoding:sample-combineArrays" : function(){ console.log('called combine sample arrays ', arguments); return; },
+
+			"encoding:sample-encodingToJSON" : function(){ console.log('called encodingToJSON ', arguments); return; },
+			"encoding:sample-encodingFromJSON" : function(){ console.log('called encodingFromJSON', arguments); return; },
+			"encoding:sample-getEncodingShema" : function(){ console.log('called sample-getEncodingShema ', arguments); return; }
+		};
+	},
+	requiredEvents : function() {
+		return ["generator:createArtifacts"];
+	},
+	initialize : function(done)
+    {
+        process.nextTick(function()
+        {
+            done();
+        })
+    }
+};
+
 describe('Testing Win Generating Artifacts -',function(){
 
     //we need to start up the WIN backend
@@ -33,14 +64,19 @@ describe('Testing Win Generating Artifacts -',function(){
     	var sampleJSON = 
 		{
 			"win-gen" : wingen,
-			"test" : emptyModule,
+			"sample-encoding" : sampleEncoding,
+			"test" : emptyModule
 		};
 		var configurations = 
 		{
-			"win-gen" : {},
+			"win-gen" : {
+				"encodings" : [
+					"sample"
+				]
+			},
 			"stuff" :
 			{
-				"encodings" : "dunno"
+				
 			}
 		};
 
@@ -64,13 +100,20 @@ describe('Testing Win Generating Artifacts -',function(){
 
     it('Should create verified artifact JSON',function(done){
 
-    	var exampleEncodings = [];
+    	var exampleEncodings = [
+    		{"simple" : "stuff", "more" : "things"}
+    	];
 
     	//now we call asking for 
-    	backbone.emit("test", "generator:createArtifacts", "sample", 2, exampleEncodings);
+    	backbone.emit("test", "generator:createArtifacts", "sample", 2, exampleEncodings, function()
+		{
 
-    	console.log('stuff');
-    	done();       
+
+	    	console.log('stuff');
+	    	done();   
+
+		});
+    
     });
 });
 
