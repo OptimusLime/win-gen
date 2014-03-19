@@ -7,7 +7,8 @@
   ],
   "dependencies": {
     "techjacker/q" : "*",    
-    "optimuslime-traverse" : "*",
+    "optimuslime/win-schema" : "*",
+    "optimuslime/traverse" : "*",
     "optimuslime/win-utils": "0.x.x",
     "optimuslime/cppnjs": "0.x.x",
     "optimuslime/neatjs": "0.x.x"

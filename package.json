@@ -27,11 +27,13 @@
   "dependencies": {
     "q" : "*",
     "optimuslime-traverse" : "*",
+    "win-schema" : "*",
     "win-utils": "0.x.x",
     "cppnjs": "0.x.x",
     "neatjs": "0.x.x"
   },
   "devDependencies": {
+    "colors" : "*",
     "win-backbone" : "*",
     "mocha": "1.1.x",
     "should": "1.1.x"
