@@ -44,18 +44,19 @@ var sampleEncoding =
 	eventCallbacks : function()
 	{ 
 		return {
-			"encoding:sample-createFullOffspring" : function(count, parents, override, done) { 
-				backbone.log('called create full offspring ',arguments); 
-				
-				process.nextTick(function(){
-					done(undefined, 
-						[traverse(parents[0]).clone()
-						// ,{"junk" : "stuff"}
-						,traverse(parents[0]).clone()]
-						, [[0], [0]]);
-				});
-			 	return; 
-			 },
+			// "encoding:sample-createFullOffspring" : function(genProps, parentProps, override, done) { 
+			// 	backbone.log('called create full offspring ',arguments); 
+			// 	var parents = parentProps.parents;
+			// 	process.nextTick(function(){
+			// 		done(undefined, 
+			// 			[traverse(parents[0]).clone()
+			// 			// ,{"junk" : "stuff"}
+			// 			,traverse(parents[0]).clone()]
+			// 			, [[0], [0]]);
+			// 	});
+			//  	return; 
+			//  },
+			 // "encoding:sample-"
 			"encoding:sample-combineArrays" : function(){ backbone.log('called combine sample arrays ', arguments); return; },
 			"encoding:sample-encodingToJSON" : function(){ backbone.log('called encodingToJSON ', arguments); return; },
 			"encoding:sample-encodingFromJSON" : function(){ backbone.log('called encodingFromJSON', arguments); return; },
