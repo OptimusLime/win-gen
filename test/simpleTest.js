@@ -4,11 +4,13 @@
 var assert = require('assert');
 var should = require('should');
 var colors = require('colors');
+var traverse = require('optimuslime-traverse');
 
 var wingen = require('../');
 var winback = require('win-backbone');
 
 var backbone, generator;
+var count = 0;
 
 var emptyModule = 
 {
@@ -26,23 +28,32 @@ var emptyModule =
     }
 };
 
+var refSchema = {
+	simple : "string"
+}
+
 var sampleEncoding = 
 {
 	winFunction : "encoding",
 	encodingName : "sample",
 	sampleSchema : {
-		first : "string",
-		second : "number",
-		third : {
-			fourth : "string"
-		}
+		first : "string"
+		,second : {"$ref" : "refSchema"}
+		,last : {type :"array", "$ref" : "refSchema"}
 	},
 	eventCallbacks : function()
 	{ 
 		return {
-			"encoding:sample-createOffspring" : function(count, parents, override, done) { 
-				backbone.log('called create sample offspring ',arguments); 
-				process.nextTick(function(){done(undefined, {"junk" : "stuff"});});
+			"encoding:sample-createFullOffspring" : function(count, parents, override, done) { 
+				backbone.log('called create full offspring ',arguments); 
+				
+				process.nextTick(function(){
+					done(undefined, 
+						[traverse(parents[0]).clone()
+						// ,{"junk" : "stuff"}
+						,traverse(parents[0]).clone()]
+						, [[0], [0]]);
+				});
 			 	return; 
 			 },
 			"encoding:sample-combineArrays" : function(){ backbone.log('called combine sample arrays ', arguments); return; },
@@ -62,12 +73,22 @@ var sampleEncoding =
     	backbone.log("Init encoding");
         backbone.emit(sampleEncoding.winFunction, "schema:addSchema", sampleEncoding.encodingName, sampleEncoding.sampleSchema, function(err)
         {
-        	if(err)
-        	{
-        		throw new Error(err);
+        	if(err){
+        		done(new Error(err));
+        		return;
         	}
-        	//if we're done, pass it along friend
-        	done();        	
+
+        	backbone.emit(sampleEncoding.winFunction, "schema:addSchema", "refSchema", refSchema, {skipWINAdditions : true}, function(err){
+
+				if(err){
+        			throw new Error(err);
+        		}
+
+        		//if we're done, pass it along friend
+        		done();     
+
+        	})
+	
         })
     }
 };
@@ -91,6 +112,7 @@ describe('Testing Win Generating Artifacts -',function(){
 					"sample"
 				]
 				,validateParents : true
+				,validateChildren : true
 
 			},
 			"win-schema" : {
@@ -124,16 +146,21 @@ describe('Testing Win Generating Artifacts -',function(){
     it('Should create verified artifact JSON',function(done){
 
     	var exampleEncodings = [
-    		{"simple" : "stuff", "more" : "things"}
+    		{ first : "duh", second : {simple: "stuff"}, last : [{simple : "easy"}]
+    		,wid : "012345", parents : [], dbType : "sample"
+    		}
+    		// {"simple" : "stuff", "more" : "things"}
     	];
 
     	//now we call asking for 
     	backbone.emit("test", "generator:createArtifacts", "sample", 2, exampleEncodings, function(err, artifacts)
 		{
-			console.log('Finished creating artifacts: ', err);
+			count++;
+
+			backbone.log('Finished creating artifacts: ', err);
 			if(err){
-				
-				done(new Error(JSON.stringify(err.errors)));
+				done(new Error(JSON.stringify(err)));
+				return;
 			}
 			else
 			{
