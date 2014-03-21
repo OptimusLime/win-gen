@@ -185,6 +185,8 @@ describe('Testing Win Generating Artifacts -',function(){
 		};
 		var configurations = 
 		{
+			"global" : {
+			},
 			"win-gen" : {
 				"encodings" : [
 					"sample"

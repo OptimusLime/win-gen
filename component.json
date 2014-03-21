@@ -1,6 +1,6 @@
 {
   "name": "win-gen",
-  "version": "0.0.2-2",
+  "version": "0.0.2-3",
   "description": "Create artifacts using JSON schema for use in win.",
   "scripts": [
     "lib/wingen.js"
