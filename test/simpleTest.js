@@ -96,7 +96,7 @@ var sampleEncoding =
 					offspring.push(rOffspring);
 					allParents.push(ixs);
 				}
-				backbone.log("Parents for non-ref: ".cyan, allParents);
+				// backbone.log("Parents for non-ref: ".cyan, allParents);
 				//done, send er back
 				done(undefined, offspring, allParents);
 
@@ -128,11 +128,10 @@ var sampleEncoding =
 				rObject[refToReplace] =  {offspring: refChildren, parentIxs: refParentIxs};
 				backbone.log("\n\tREplacements: ".yellow, util.inspect(rObject, false, 10), "\n");
 				done(undefined, rObject);
-			},	
-			"encoding:sample-combineArrays" : function(){ backbone.log('called combine sample arrays ', arguments); return; },
-			"encoding:sample-encodingToJSON" : function(){ backbone.log('called encodingToJSON ', arguments); return; },
-			"encoding:sample-encodingFromJSON" : function(){ backbone.log('called encodingFromJSON', arguments); return; },
-			"encoding:sample-getEncodingShema" : function(){ backbone.log('called sample-getEncodingShema ', arguments); return; }
+			}
+			// ,	
+			// "encoding:sample-encodingToJSON" : function(){ backbone.log('called encodingToJSON ', arguments); return; },
+			// "encoding:sample-encodingFromJSON" : function(){ backbone.log('called encodingFromJSON', arguments); return; },
 		};
 	},
 	requiredEvents : function() {
@@ -232,15 +231,13 @@ describe('Testing Win Generating Artifacts -',function(){
     	backbone.emit("test", "generator:createArtifacts", "sample", 2, exampleEncodings, function(err, artifacts)
 		{
 			count++;
-
-			backbone.log('Finished creating artifacts: ', err);
 			if(err){
 				done(new Error(JSON.stringify(err)));
 				return;
 			}
 			else
 			{
-		    	backbone.log('Finished generating artifacts, ', util.inspect(artifacts, false,10));
+		    	backbone.log('\tFinished generating artifacts, '.cyan, util.inspect(artifacts, false,10));
 		    	done();   
 
 			}
