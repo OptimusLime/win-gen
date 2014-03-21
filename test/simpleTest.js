@@ -12,7 +12,7 @@ var wingen = require('../');
 var wMath = require('win-utils').math;
 var winback = require('win-backbone');
 
-var backbone, generator, backEmit;
+var backbone, generator, backEmit, backLog;
 var count = 0;
 
 var emptyModule = 
@@ -48,7 +48,7 @@ var sampleEncoding =
 	{ 
 		return {
 			// "encoding:sample-createFullOffspring" : function(genProps, parentProps, override, done) { 
-			// 	backbone.log('called create full offspring ',arguments); 
+			// 	backLog('called create full offspring ',arguments); 
 			// 	var parents = parentProps.parents;
 				
 			// 	var count = genProps.count;
@@ -96,7 +96,7 @@ var sampleEncoding =
 					offspring.push(rOffspring);
 					allParents.push(ixs);
 				}
-				// backbone.log("Parents for non-ref: ".cyan, allParents);
+				// backLog("Parents for non-ref: ".cyan, allParents);
 				//done, send er back
 				done(undefined, offspring, allParents);
 
@@ -105,7 +105,7 @@ var sampleEncoding =
 			//simple
 			"encoding:sample-chooseReferenceBehavior" : function(refPaths, genProps, parentProps, override, done){
 
-				backbone.log("\n\tref paths req: ".cyan, refPaths, "\n");
+				backLog("\n\tref paths req: ".cyan, refPaths, "\n");
 
 				var parents = parentProps.parents;
 				var count = genProps.count;
@@ -126,12 +126,12 @@ var sampleEncoding =
 				}
 				var rObject = {};
 				rObject[refToReplace] =  {offspring: refChildren, parentIxs: refParentIxs};
-				backbone.log("\n\tREplacements: ".yellow, util.inspect(rObject, false, 10), "\n");
+				backLog("\n\tREplacements: ".yellow, util.inspect(rObject, false, 10), "\n");
 				done(undefined, rObject);
 			}
 			// ,	
-			// "encoding:sample-encodingToJSON" : function(){ backbone.log('called encodingToJSON ', arguments); return; },
-			// "encoding:sample-encodingFromJSON" : function(){ backbone.log('called encodingFromJSON', arguments); return; },
+			// "encoding:sample-encodingToJSON" : function(){ backLog('called encodingToJSON ', arguments); return; },
+			// "encoding:sample-encodingFromJSON" : function(){ backLog('called encodingFromJSON', arguments); return; },
 		};
 	},
 	requiredEvents : function() {
@@ -142,7 +142,7 @@ var sampleEncoding =
 	},
 	initialize : function(done)
     {
-    	backbone.log("Init encoding");
+    	backLog("Init encoding");
 
     	var emitter = backbone.getEmitter(sampleEncoding);
         emitter.emit("schema:addSchema", sampleEncoding.encodingName, sampleEncoding.sampleSchema, function(err)
@@ -172,6 +172,10 @@ describe('Testing Win Generating Artifacts -',function(){
     //we need to start up the WIN backend
     before(function(done){
 
+    	//do this up front yo
+    	backbone = new winback();
+
+
     	var sampleJSON = 
 		{
 			"win-gen" : wingen,
@@ -185,12 +189,15 @@ describe('Testing Win Generating Artifacts -',function(){
 				"encodings" : [
 					"sample"
 				]
+				,logLevel : backbone.testing
 				,validateParents : true
 				,validateOffspring : true
 
 			},
 			"win-schema" : {
 				multipleErrors : true
+				// ,logLevel : backbone.testing
+
 			},
 			"stuff" :
 			{
@@ -198,10 +205,11 @@ describe('Testing Win Generating Artifacts -',function(){
 			}
 		};
 
-    	backbone = new winback();
-    	backbone.log.logLevel = backbone.log.testing;
+    	backbone.logLevel = backbone.testing;
 
     	backEmit = backbone.getEmitter(emptyModule);
+    	backLog = backbone.getLogger({winFunction:"mocha"});
+    	backLog.logLevel = backbone.testing;
 
     	//loading modules is synchronous
     	backbone.loadModules(sampleJSON, configurations);
@@ -209,8 +217,8 @@ describe('Testing Win Generating Artifacts -',function(){
     	var registeredEvents = backbone.registeredEvents();
     	var requiredEvents = backbone.moduleRequirements();
     		
-    	backbone.log('Backbone Events registered: ', registeredEvents);
-    	backbone.log('Required: ', requiredEvents);
+    	backLog('Backbone Events registered: ', registeredEvents);
+    	backLog('Required: ', requiredEvents);
 
     	backbone.initializeModules(function()
     	{
@@ -241,7 +249,7 @@ describe('Testing Win Generating Artifacts -',function(){
 			}
 			else
 			{
-		    	backbone.log('\tFinished generating artifacts, '.cyan, util.inspect(artifacts, false,10));
+		    	backLog('\tFinished generating artifacts, '.cyan, util.inspect(artifacts, false,10));
 		    	done();   
 
 			}
