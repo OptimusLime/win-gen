@@ -74,13 +74,14 @@ var sampleEncoding =
 
 			//  	return; 
 			//  },
+			//randomly replaces the non-reference objects with those from the parent -- nothing complicated
 			"encoding:sample-createNonReferenceOffspring" : function(genProps, parentProps, override, done){
 				//we create stuff here
 				var parents = parentProps.parents;
 				var count = genProps.count;
 
 				var allParents = [];
-				var children = [];
+				var offspring = [];
 
 				for(var c=0; c < count; c++)
 				{
@@ -92,14 +93,42 @@ var sampleEncoding =
 					rOffspring.second = "This will be erased.";
 					ixs.push(pIx);
 
-					children.push(rOffspring);
+					offspring.push(rOffspring);
 					allParents.push(ixs);
 				}
 				backbone.log("Parents for non-ref: ".cyan, allParents);
 				//done, send er back
-				done(undefined, children, allParents);
+				done(undefined, offspring, allParents);
 
 			},
+			//randomly replaces one of the references with the saem object from the parents
+			//simple
+			"encoding:sample-chooseReferenceBehavior" : function(refPaths, genProps, parentProps, override, done){
+
+				backbone.log("\n\tref paths req: ".cyan, refPaths, "\n");
+
+				var parents = parentProps.parents;
+				var count = genProps.count;
+				var refToReplace = refPaths[wMath.next(refPaths.length)];
+
+				var refChildren = [];
+				var refParentIxs = [];
+				//have to replace inside all the children
+				for(var c=0; c < count; c++)
+				{	
+					//just pull that object from the parents
+					var ixs = [];
+					var pIx = wMath.next(parents.length);
+					var obj = traverse(parents[pIx]).get(refToReplace.split("///"));
+
+					refChildren.push(obj);
+					refParentIxs.push(ixs);
+				}
+				var rObject = {};
+				rObject[refToReplace] =  {offspring: refChildren, parentIxs: refParentIxs};
+				backbone.log("\n\tREplacements: ".yellow, util.inspect(rObject, false, 10), "\n");
+				done(undefined, rObject);
+			},	
 			"encoding:sample-combineArrays" : function(){ backbone.log('called combine sample arrays ', arguments); return; },
 			"encoding:sample-encodingToJSON" : function(){ backbone.log('called encodingToJSON ', arguments); return; },
 			"encoding:sample-encodingFromJSON" : function(){ backbone.log('called encodingFromJSON', arguments); return; },
@@ -156,7 +185,7 @@ describe('Testing Win Generating Artifacts -',function(){
 					"sample"
 				]
 				,validateParents : true
-				,validateChildren : true
+				,validateOffspring : true
 
 			},
 			"win-schema" : {
