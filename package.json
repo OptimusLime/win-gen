@@ -1,6 +1,6 @@
 {
   "name": "win-gen",
-  "version": "0.0.2",
+  "version": "0.0.2-1",
   "description": "Create artifacts using JSON schema for use in win.",
   "keywords": [
     "Neural Network",
@@ -25,16 +25,16 @@
   "bugs": "https://github.com/OptimusLime/winjs/issues",
   "license": "MIT",
   "dependencies": {
-    "q" : "*",
-    "optimuslime-traverse" : "*",
-    "win-schema" : "*",
+    "q": "*",
+    "optimuslime-traverse": "*",
+    "win-schema": "*",
     "win-utils": "0.x.x",
     "cppnjs": "0.x.x",
     "neatjs": "0.x.x"
   },
   "devDependencies": {
-    "colors" : "*",
-    "win-backbone" : "*",
+    "colors": "*",
+    "win-backbone": "*",
     "mocha": "1.1.x",
     "should": "1.1.x"
   }

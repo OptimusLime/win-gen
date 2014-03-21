@@ -12,7 +12,7 @@ var wingen = require('../');
 var wMath = require('win-utils').math;
 var winback = require('win-backbone');
 
-var backbone, generator;
+var backbone, generator, backEmit;
 var count = 0;
 
 var emptyModule = 
@@ -143,14 +143,16 @@ var sampleEncoding =
 	initialize : function(done)
     {
     	backbone.log("Init encoding");
-        backbone.emit(sampleEncoding.winFunction, "schema:addSchema", sampleEncoding.encodingName, sampleEncoding.sampleSchema, function(err)
+
+    	var emitter = backbone.getEmitter(sampleEncoding);
+        emitter.emit("schema:addSchema", sampleEncoding.encodingName, sampleEncoding.sampleSchema, function(err)
         {
         	if(err){
         		done(new Error(err));
         		return;
         	}
 
-        	backbone.emit(sampleEncoding.winFunction, "schema:addSchema", "refSchema", refSchema, {skipWINAdditions : true}, function(err){
+        	emitter.emit("schema:addSchema", "refSchema", refSchema, {skipWINAdditions : true}, function(err){
 
 				if(err){
         			throw new Error(err);
@@ -199,6 +201,8 @@ describe('Testing Win Generating Artifacts -',function(){
     	backbone = new winback();
     	backbone.log.logLevel = backbone.log.testing;
 
+    	backEmit = backbone.getEmitter(emptyModule);
+
     	//loading modules is synchronous
     	backbone.loadModules(sampleJSON, configurations);
 
@@ -228,7 +232,7 @@ describe('Testing Win Generating Artifacts -',function(){
     	];
 
     	//now we call asking for 
-    	backbone.emit("test", "generator:createArtifacts", "sample", 2, exampleEncodings, function(err, artifacts)
+    	backEmit("generator:createArtifacts", "sample", 2, exampleEncodings, function(err, artifacts)
 		{
 			count++;
 			if(err){
