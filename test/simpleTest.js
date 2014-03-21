@@ -6,7 +6,10 @@ var should = require('should');
 var colors = require('colors');
 var traverse = require('optimuslime-traverse');
 
+var util = require('util');
+
 var wingen = require('../');
+var wMath = require('win-utils').math;
 var winback = require('win-backbone');
 
 var backbone, generator;
@@ -47,16 +50,56 @@ var sampleEncoding =
 			// "encoding:sample-createFullOffspring" : function(genProps, parentProps, override, done) { 
 			// 	backbone.log('called create full offspring ',arguments); 
 			// 	var parents = parentProps.parents;
-			// 	process.nextTick(function(){
-			// 		done(undefined, 
-			// 			[traverse(parents[0]).clone()
-			// 			// ,{"junk" : "stuff"}
-			// 			,traverse(parents[0]).clone()]
-			// 			, [[0], [0]]);
-			// 	});
+				
+			// 	var count = genProps.count;
+
+			// 	var allParents = [];
+			// 	var children = [];
+
+			// 	for(var c=0; c < count; c++)
+			// 	{
+			// 		var ixs = [];
+			// 		var pIx = wMath.next(parents.length);
+			// 		var rOffspring = traverse(parents[pIx]).clone();									
+			// 		rOffspring.first = parents[pIx].first + "-" + c;
+			// 		// rOffspring.second = "This will be erased.";
+
+			// 		ixs.push(pIx);
+			// 		children.push(rOffspring);
+			// 		allParents.push(ixs);
+			// 	}
+
+			// 	//done, send er back
+			// 	done(undefined, children, allParents);
+
 			//  	return; 
 			//  },
-			 // "encoding:sample-"
+			"encoding:sample-createNonReferenceOffspring" : function(genProps, parentProps, override, done){
+				//we create stuff here
+				var parents = parentProps.parents;
+				var count = genProps.count;
+
+				var allParents = [];
+				var children = [];
+
+				for(var c=0; c < count; c++)
+				{
+					var rOffspring = {};
+					
+					var ixs = [];
+					var pIx = wMath.next(parents.length);
+					rOffspring.first = parents[pIx].first + "-" + c;
+					rOffspring.second = "This will be erased.";
+					ixs.push(pIx);
+
+					children.push(rOffspring);
+					allParents.push(ixs);
+				}
+				backbone.log("Parents for non-ref: ".cyan, allParents);
+				//done, send er back
+				done(undefined, children, allParents);
+
+			},
 			"encoding:sample-combineArrays" : function(){ backbone.log('called combine sample arrays ', arguments); return; },
 			"encoding:sample-encodingToJSON" : function(){ backbone.log('called encodingToJSON ', arguments); return; },
 			"encoding:sample-encodingFromJSON" : function(){ backbone.log('called encodingFromJSON', arguments); return; },
@@ -149,6 +192,9 @@ describe('Testing Win Generating Artifacts -',function(){
     	var exampleEncodings = [
     		{ first : "duh", second : {simple: "stuff"}, last : [{simple : "easy"}]
     		,wid : "012345", parents : [], dbType : "sample"
+    		},
+			{ first : "mofo", second : {simple: "giify"}, last : [{simple : "happy"}]
+    		,wid : "543210", parents : [], dbType : "sample"
     		}
     		// {"simple" : "stuff", "more" : "things"}
     	];
@@ -165,7 +211,7 @@ describe('Testing Win Generating Artifacts -',function(){
 			}
 			else
 			{
-		    	backbone.log('Finished generating artifacts, ', artifacts);
+		    	backbone.log('Finished generating artifacts, ', util.inspect(artifacts, false,10));
 		    	done();   
 
 			}
