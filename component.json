@@ -1,6 +1,6 @@
 {
   "name": "win-gen",
-  "version": "0.0.2-3",
+  "version": "0.0.2-4",
   "description": "Create artifacts using JSON schema for use in win.",
   "scripts": [
     "lib/wingen.js"
@@ -9,9 +9,7 @@
     "techjacker/q": "*",
     "optimuslime/win-schema": "*",
     "optimuslime/traverse": "*",
-    "optimuslime/win-utils": "0.x.x",
-    "optimuslime/cppnjs": "0.x.x",
-    "optimuslime/neatjs": "0.x.x"
+    "optimuslime/win-utils": "0.x.x"
   },
   "main": "lib/wingen.js"
 }
