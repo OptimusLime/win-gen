@@ -1,6 +1,6 @@
 {
   "name": "win-gen",
-  "version": "0.0.2-5",
+  "version": "0.0.2-6",
   "description": "Create artifacts using JSON schema for use in win.",
   "remotes": [
     "https://raw.github.com",
@@ -11,10 +11,10 @@
     "lib/module/backbone.js"
   ],
   "dependencies": {
-    "techjacker/q": "*",
-    "optimuslime/win-schema": "*",
-    "optimuslime/traverse": "*",
-    "optimuslime/win-utils": "*"
+    "techjacker/q": "master",
+    "optimuslime/win-schema": "master",
+    "optimuslime/traverse": "master",
+    "optimuslime/win-utils": "master"
   },
   "main": "lib/wingen.js"
 }
