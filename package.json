@@ -1,6 +1,6 @@
 {
   "name": "win-gen",
-  "version": "0.0.2-7",
+  "version": "0.0.2-8",
   "description": "Create artifacts using JSON schema for use in win.",
   "keywords": [
     "Neural Network",
@@ -27,7 +27,7 @@
   "dependencies": {
     "q": "*",
     "optimuslime-traverse": "*",
-    "win-schema": "0.0.5-5",
+    "win-schema": "0.0.x",
     "win-utils": "0.x.x"
   },
   "devDependencies": {
