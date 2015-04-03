@@ -1,6 +1,6 @@
 {
   "name": "win-gen",
-  "version": "0.0.2-6",
+  "version": "0.0.2-7",
   "description": "Create artifacts using JSON schema for use in win.",
   "remotes": [
     "https://raw.github.com",
@@ -12,7 +12,7 @@
   ],
   "dependencies": {
     "techjacker/q": "master",
-    "optimuslime/win-schema": "master",
+    "optimuslime/win-schema": "0.0.5-5",
     "optimuslime/traverse": "master",
     "optimuslime/win-utils": "master"
   },
